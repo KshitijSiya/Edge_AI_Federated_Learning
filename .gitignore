@@ -1,0 +1,20 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Raw Inertial signals (redundant 200MB+ raw sensor time series; X_train/X_test 561-features are used)
+**/Inertial Signals/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
