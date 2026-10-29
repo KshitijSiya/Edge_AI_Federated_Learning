@@ -13,6 +13,12 @@ __pycache__/
 # Raw Inertial signals (redundant 200MB+ raw sensor time series; X_train/X_test 561-features are used)
 **/Inertial Signals/
 
+# Model checkpoints
+*.npz
+*.pt
+*.pth
+*.onnx
+
 # IDE & OS
 .vscode/
 .idea/
