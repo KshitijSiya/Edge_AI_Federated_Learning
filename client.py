@@ -59,25 +59,37 @@ def load_subject_data(
     Returns:
         X_train, X_test, y_train, y_test: Partitioned feature matrices and activity labels.
     """
-    subject_path = f"{data_dir}/train/subject_train.txt"
-    y_path = f"{data_dir}/train/y_train.txt"
-    x_path = f"{data_dir}/train/X_train.txt"
-
     print(f"\n[Edge Device] Loading local sensor partition for Subject #{subject_id}...")
-    
-    # 1. Read subjects mapping and labels
-    subjects = pd.read_csv(subject_path, header=None)[0]
+
+    # 1. Determine whether the subject resides in 'train' or 'test' partition
+    train_sub_path = os.path.join(data_dir, "train", "subject_train.txt")
+    train_subs = pd.read_csv(train_sub_path, header=None)[0]
+
+    if subject_id in set(train_subs):
+        split_name = "train"
+        y_path = os.path.join(data_dir, "train", "y_train.txt")
+        x_path = os.path.join(data_dir, "train", "X_train.txt")
+        subjects = train_subs
+    else:
+        test_sub_path = os.path.join(data_dir, "test", "subject_test.txt")
+        test_subs = pd.read_csv(test_sub_path, header=None)[0]
+        if subject_id in set(test_subs):
+            split_name = "test"
+            y_path = os.path.join(data_dir, "test", "y_test.txt")
+            x_path = os.path.join(data_dir, "test", "X_test.txt")
+            subjects = test_subs
+        else:
+            raise ValueError(
+                f"Subject #{subject_id} not found in UCI HAR dataset. "
+                f"Valid subjects are integers 1 through 30."
+            )
+
     labels = pd.read_csv(y_path, header=None)[0]
 
     # Find the row indices belonging to the specified subject
     subject_indices = subjects[subjects == subject_id].index.tolist()
-    if not subject_indices:
-        raise ValueError(
-            f"Subject #{subject_id} not found in {subject_path}. "
-            f"Available training subjects: {sorted(subjects.unique())}"
-        )
 
-    # 2. Extract only rows belonging to this subject from X_train.txt
+    # 2. Extract only rows belonging to this subject
     # (Skip rows not matching subject indices for fast I/O)
     index_set = set(subject_indices)
     features_df = pd.read_csv(
