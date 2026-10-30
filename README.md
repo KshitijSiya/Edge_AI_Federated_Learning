@@ -66,6 +66,12 @@ python client.py --subject 1
 python client.py --subject 2
 ```
 
+### 4. Interactive Web Dashboard (Streamlit Frontend)
+You can also run the graphical mission control to simulate fleets, view interactive telemetry charts, and test real-time on-device inference:
+```bash
+streamlit run app.py
+```
+
 ---
 
 ## 🔬 Mathematical Aggregation (FedAvg)
